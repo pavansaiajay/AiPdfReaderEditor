@@ -35,4 +35,8 @@ dependencies {
     implementation(libs.firebase.ai)
     implementation(libs.mlkit.document.scanner)
     implementation(libs.mlkit.text.recognition)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.datastore.preferences)
 }
