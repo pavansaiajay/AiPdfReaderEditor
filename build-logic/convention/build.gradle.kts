@@ -4,18 +4,17 @@ plugins {
 
 group = "pavansaiajayx.aipdfreadereditor.buildlogic"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
-    compileOnly(libs.android.gradlePlugin)
-    compileOnly(libs.kotlin.gradlePlugin)
-    compileOnly(libs.compose.compiler.gradlePlugin)
-    compileOnly(libs.ksp.gradlePlugin)
-    compileOnly(libs.hilt.gradlePlugin)
-    compileOnly(libs.room3.gradlePlugin)
+    implementation(libs.android.gradlePlugin)
+    implementation(libs.kotlin.gradlePlugin)
+    implementation(libs.compose.compiler.gradlePlugin)
+    implementation(libs.ksp.gradlePlugin)
+    implementation(libs.hilt.gradlePlugin)
+    implementation(libs.room3.gradlePlugin)
 }
 
 gradlePlugin {

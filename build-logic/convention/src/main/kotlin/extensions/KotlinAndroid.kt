@@ -10,20 +10,16 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
 ) {
     commonExtension.apply {
         compileSdk = 37
 
-        defaultConfig {
-            minSdk = 26
-            testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
+        defaultConfig.minSdk = 26
+        defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
-        }
+        compileOptions.sourceCompatibility = JavaVersion.VERSION_17
+        compileOptions.targetCompatibility = JavaVersion.VERSION_17
     }
 
     tasks.withType<KotlinCompile>().configureEach {
