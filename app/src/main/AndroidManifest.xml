@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting">
 
-        <!-- AdMob App ID (TEST ID - replace with real ID before publishing) -->
+        <!-- AdMob App ID configured via manifestPlaceholders in build.gradle.kts -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="${admobAppId}" />
 
         <activity
             android:name=".MainActivity"

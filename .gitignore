@@ -41,12 +41,29 @@ captures/
 .idea/
 .idea_modules/
 
-# Keystore files
+# Keystore & Signing files
 *.jks
 *.keystore
+signing.properties
 
-# Google Services keys
+# Google Services & Firebase keys
 google-services.json
+**/google-services.json
+**/google-services-*.json
+service-account*.json
+**/service-account*.json
+credentials*.json
+secrets.properties
+
+# Environment variables & secrets
+.env
+.env.*
+
+# Certificates & Private Keys
+*.pem
+*.p12
+*.key
+*.pk8
 
 # External native build folder
 .externalNativeBuild

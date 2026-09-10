@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("aipdf.android.application")
     id("aipdf.android.hilt")
@@ -14,6 +16,17 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProps = Properties().apply {
+            val propFile = rootProject.file("local.properties")
+            if (propFile.exists()) {
+                propFile.inputStream().use { load(it) }
+            }
+        }
+        val admobAppId = localProps.getProperty("ADMOB_APP_ID")
+            ?: System.getenv("ADMOB_APP_ID")
+            ?: "ca-app-pub-3940256099942544~3347511713"
+        manifestPlaceholders["admobAppId"] = admobAppId
     }
 
     buildTypes {
@@ -68,3 +81,43 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
+// Automatically provision a safe headless mock if google-services.json is absent
+val googleServicesFile = layout.projectDirectory.file("google-services.json").asFile
+if (!googleServicesFile.exists()) {
+    googleServicesFile.writeText(
+        """
+        {
+          "project_info": {
+            "project_number": "123456789012",
+            "project_id": "aipdfreadereditor",
+            "storage_bucket": "aipdfreadereditor.appspot.com"
+          },
+          "client": [
+            {
+              "client_info": {
+                "mobilesdk_app_id": "1:123456789012:android:abcdef1234567890",
+                "android_client_info": {
+                  "package_name": "pavansaiajayx.aipdfreadereditor.app"
+                }
+              },
+              "oauth_client": [],
+              "api_key": [
+                {
+                  "current_key": "MOCK_KEY_FOR_LOCAL_DEV_ONLY"
+                }
+              ],
+              "services": {
+                "analytics_service": {
+                  "status": 1
+                }
+              }
+            }
+          ],
+          "configuration_version": "1"
+        }
+        """.trimIndent()
+    )
+}
+
+

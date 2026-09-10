@@ -52,7 +52,7 @@ jobs:
                 "oauth_client": [],
                 "api_key": [
                   {
-                    "current_key": "AIzaSyMockKeyForContinuousIntegration123"
+                    "current_key": "MOCK_KEY_FOR_HEADLESS_CI_ONLY"
                   }
                 ],
                 "services": {
