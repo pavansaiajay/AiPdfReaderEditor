@@ -5,10 +5,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Document(
     val id: String,
-    val title: String,
+    val fileName: String,
     val uri: String,
     val sizeBytes: Long,
     val pageCount: Int = 0,
-    val lastModifiedEpochMs: Long = System.currentTimeMillis(),
-    val thumbnailUri: String? = null
+    val lastAccessedEpochMs: Long = System.currentTimeMillis(),
+    val createdAtEpochMs: Long = System.currentTimeMillis(),
+    val thumbnailUri: String? = null,
+    val isFavorite: Boolean = false,
+    val isEncrypted: Boolean = false
 )

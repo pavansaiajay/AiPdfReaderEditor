@@ -1,5 +1,6 @@
 plugins {
     id("aipdf.android.library")
+    id("aipdf.android.hilt")
 }
 
 android {
@@ -7,6 +8,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     testImplementation(libs.junit)
