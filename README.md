@@ -1,8 +1,11 @@
 # 📄 AiPdfReaderEditor
+> A modern, privacy-respecting, bloat-free Android PDF utility and AI document workstation — designed, architected, and engineered 100% end-to-end through an autonomous **Agentic-First** workflow.
 
-A modern, production-grade, privacy-respecting Android PDF utility and AI intelligence application built with Jetpack Compose, Material 3, and Clean Multi-Module Architecture.
-
----
+### ✨ Highlights
+- **100% Free Offline Utilities**: Merge, Split, Reorder, Delete, Annotate, Compress, and Hardware Scan with zero paywalls.
+- **Fair Token-Metered AI**: Document summarization, conversational Q&A, and OCR powered by Google Gemini (Firebase Vertex AI), billed dynamically on actual token compute.
+- **Modern Android Stack**: Kotlin, Jetpack Compose, Material 3 Dual-Theme, Clean Multi-Module Architecture, Dagger-Hilt, Room 3, and Type-Safe Navigation Compose.
+- **Built by Agents**: Scaffolded with a 53-skill autonomous agent ecosystem (Superpowers, Unlazy acceptance gates, Chris Banes Compose specialists, and strict engineering constitutions).
 
 ## 🏛️ Architecture & Governance Documents
 
