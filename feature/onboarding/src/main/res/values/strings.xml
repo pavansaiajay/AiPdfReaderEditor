@@ -1,0 +1,14 @@
+<resources>
+    <string name="onboarding_title_offline">100% Offline Utilities</string>
+    <string name="onboarding_desc_offline">Merge, split, compress, and edit PDFs locally and securely on your device without an internet connection.</string>
+
+    <string name="onboarding_title_ai">AI Document Intelligence</string>
+    <string name="onboarding_desc_ai">Summarize, analyze, and extract key insights from your documents instantly using Gemini AI.</string>
+
+    <string name="onboarding_title_credits">Daily Free AI Credits</string>
+    <string name="onboarding_desc_credits">Receive 5 free credits every single day to use with AI features, with zero mandatory subscriptions.</string>
+
+    <string name="onboarding_action_next">Next</string>
+    <string name="onboarding_action_get_started">Get Started</string>
+    <string name="onboarding_action_skip">Skip</string>
+</resources>
