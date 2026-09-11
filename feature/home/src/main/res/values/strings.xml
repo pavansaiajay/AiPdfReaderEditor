@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_title">AiPdf Workstation</string>
+    <string name="home_search_placeholder">Search documents...</string>
+    <string name="home_section_recent">Recent Documents</string>
+    <string name="home_quick_action_open">Open PDF</string>
+    <string name="home_quick_action_scan">Scan Document</string>
+    <string name="home_quick_action_tools">All Tools</string>
+    <string name="home_empty_title">No Documents Yet</string>
+    <string name="home_empty_desc">Open or scan your first PDF to get started with fast offline tools and AI intelligence.</string>
+    <string name="home_empty_action">Open PDF</string>
+    <string name="home_ad_headline">Work Smarter with AiPdf</string>
+    <string name="home_ad_body">Explore offline PDF editing, compression, and Gemini AI summarization directly on your device.</string>
+    <string name="home_delete_confirm_title">Delete Document</string>
+    <string name="home_delete_confirm_message">Are you sure you want to remove this document from history?</string>
+    <string name="home_delete_action">Delete</string>
+    <string name="home_cancel_action">Cancel</string>
+</resources>
