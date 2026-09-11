@@ -1,0 +1,10 @@
+<resources>
+    <string name="viewer_title">PDF Viewer</string>
+    <string name="viewer_action_chat">AI Chat</string>
+    <string name="viewer_action_tools">Tools</string>
+    <string name="viewer_action_back">Back</string>
+    <string name="viewer_page_format">Page %1$d of %2$d</string>
+    <string name="viewer_zoom_format">%1$d%%</string>
+    <string name="viewer_reset_zoom">Reset Zoom</string>
+    <string name="viewer_error_load">Failed to load PDF document.</string>
+</resources>
