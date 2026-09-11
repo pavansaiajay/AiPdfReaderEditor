@@ -1,0 +1,58 @@
+<resources>
+    <string name="tools_title">PDF Utilities</string>
+    <string name="tools_subtitle">High-performance, 100% offline &amp; private</string>
+    <string name="tools_badge_free_offline">100% Free • Offline</string>
+    <string name="tools_back_description">Back to previous screen</string>
+
+    <!-- Categories -->
+    <string name="tools_category_organize">Organize &amp; Manage</string>
+    <string name="tools_category_convert">Convert &amp; Optimize</string>
+    <string name="tools_category_security">Security &amp; Protection</string>
+
+    <!-- Tool Names and Descriptions -->
+    <string name="tool_merge_title">Merge PDFs</string>
+    <string name="tool_merge_desc">Combine multiple PDF documents into a single file</string>
+
+    <string name="tool_split_title">Split PDF</string>
+    <string name="tool_split_desc">Separate PDF into individual page files</string>
+
+    <string name="tool_compress_title">Compress PDF</string>
+    <string name="tool_compress_desc">Reduce file size while preserving document quality</string>
+
+    <string name="tool_images_to_pdf_title">Images to PDF</string>
+    <string name="tool_images_to_pdf_desc">Convert photos and images into a single PDF document</string>
+
+    <string name="tool_pdf_to_images_title">PDF to Images</string>
+    <string name="tool_pdf_to_images_desc">Export PDF pages as high-quality JPEG images</string>
+
+    <string name="tool_encrypt_title">Protect PDF</string>
+    <string name="tool_encrypt_desc">Secure your document with password encryption</string>
+
+    <string name="tool_decrypt_title">Unlock PDF</string>
+    <string name="tool_decrypt_desc">Remove password protection from encrypted document</string>
+
+    <string name="tool_watermark_title">Add Watermark</string>
+    <string name="tool_watermark_desc">Stamp custom text or confidential watermark across pages</string>
+
+    <string name="tool_extract_text_title">Extract Text</string>
+    <string name="tool_extract_text_desc">Extract all textual content into a plain text file</string>
+
+    <string name="tool_rotate_title">Rotate Pages</string>
+    <string name="tool_rotate_desc">Rotate pages by 90°, 180°, or 270°</string>
+
+    <!-- Dialogs and Actions -->
+    <string name="tools_action_select_files">Select Files</string>
+    <string name="tools_action_process">Run Tool</string>
+    <string name="tools_action_cancel">Cancel</string>
+    <string name="tools_action_dismiss">Dismiss</string>
+    <string name="tools_action_open">Open PDF</string>
+    <string name="tools_processing">Processing document...</string>
+    <string name="tools_success_title">Operation Completed</string>
+    <string name="tools_success_desc">Your file has been processed successfully.</string>
+    <string name="tools_password_hint">Enter password</string>
+    <string name="tools_watermark_hint">Enter watermark text (e.g. CONFIDENTIAL)</string>
+    <string name="tools_rotation_hint">Select rotation angle</string>
+    <string name="tools_rotation_90">90° Clockwise</string>
+    <string name="tools_rotation_180">180°</string>
+    <string name="tools_rotation_270">270° (90° CCW)</string>
+</resources>

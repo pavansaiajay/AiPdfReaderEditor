@@ -40,20 +40,72 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * Production PDF manipulation engine powered by PDFBox Android.
+ * Production PDF manipulation engine contract powered by PDFBox Android.
  * Invariant: Offline operations are strictly 100% free with zero CreditManager coupling.
  */
+interface PdfEngine {
+    val cacheDir: File
+
+    suspend fun mergePdfs(uris: List<Uri>, outputCacheFile: File, onProgress: ((Int) -> Unit)? = null): Result<File>
+    suspend fun splitPdf(uri: Uri, outputCacheFolder: File): Result<List<File>>
+    suspend fun compressPdf(uri: Uri, outputCacheFile: File): Result<File>
+    suspend fun copyToUri(sourceFile: File, destinationUri: Uri): Result<Unit>
+    suspend fun copyToFolder(sourceFiles: List<File>, folderUri: Uri): Result<List<Pair<String, Uri>>>
+    suspend fun encryptPdf(uri: Uri, password: String, outputCacheFile: File): Result<File>
+    suspend fun decryptPdf(uri: Uri, password: String, outputCacheFile: File): Result<File>
+    suspend fun imagesToPdf(uris: List<Uri>, outputCacheFile: File): Result<File>
+    suspend fun pdfToImages(uri: Uri, outputCacheFolder: File): Result<List<File>>
+    suspend fun addWatermark(uri: Uri, watermarkText: String, outputCacheFile: File): Result<File>
+    suspend fun extractText(uri: Uri, outputCacheFile: File): Result<File>
+    suspend fun extractTextToString(uri: Uri): Result<String>
+    suspend fun deletePages(uri: Uri, pagesToRemove: List<Int>, outputCacheFile: File): Result<File>
+    suspend fun rotatePages(uri: Uri, rotationDegrees: Int, outputCacheFile: File): Result<File>
+    suspend fun reorderPages(uri: Uri, newOrder: List<Int>, outputCacheFile: File): Result<File>
+    suspend fun extractSinglePage(uri: Uri, pageNumber: Int, outputCacheFile: File): Result<File>
+    suspend fun flattenPdf(uri: Uri, outputCacheFile: File): Result<File>
+    suspend fun searchInPdf(uri: Uri, query: String): Result<List<Int>>
+    suspend fun getPageCount(uri: Uri): Result<Int>
+    suspend fun splitSelectedPages(uri: Uri, selectedPages: List<Int>, outputCacheFolder: File): Result<List<File>>
+    suspend fun extractPages(uri: Uri, pages: List<Int>, outputCacheFile: File): Result<File>
+    suspend fun applyAnnotations(uri: Uri, edits: List<PdfEdit>, pageIndex: Int, outputCacheFile: File): Result<File>
+
+    suspend fun mergePdfUris(uriStrings: List<String>, outputCacheFile: File, onProgress: ((Int) -> Unit)? = null): Result<File> =
+        mergePdfs(uriStrings.map { Uri.parse(it) }, outputCacheFile, onProgress)
+    suspend fun splitPdfUri(uriString: String, outputCacheFolder: File): Result<List<File>> =
+        splitPdf(Uri.parse(uriString), outputCacheFolder)
+    suspend fun compressPdfUri(uriString: String, outputCacheFile: File): Result<File> =
+        compressPdf(Uri.parse(uriString), outputCacheFile)
+    suspend fun encryptPdfUri(uriString: String, password: String, outputCacheFile: File): Result<File> =
+        encryptPdf(Uri.parse(uriString), password, outputCacheFile)
+    suspend fun decryptPdfUri(uriString: String, password: String, outputCacheFile: File): Result<File> =
+        decryptPdf(Uri.parse(uriString), password, outputCacheFile)
+    suspend fun imagesToPdfUris(uriStrings: List<String>, outputCacheFile: File): Result<File> =
+        imagesToPdf(uriStrings.map { Uri.parse(it) }, outputCacheFile)
+    suspend fun pdfToImagesUri(uriString: String, outputCacheFolder: File): Result<List<File>> =
+        pdfToImages(Uri.parse(uriString), outputCacheFolder)
+    suspend fun addWatermarkUri(uriString: String, watermarkText: String, outputCacheFile: File): Result<File> =
+        addWatermark(Uri.parse(uriString), watermarkText, outputCacheFile)
+    suspend fun extractTextUri(uriString: String, outputCacheFile: File): Result<File> =
+        extractText(Uri.parse(uriString), outputCacheFile)
+    suspend fun rotatePagesUri(uriString: String, rotationDegrees: Int, outputCacheFile: File): Result<File> =
+        rotatePages(Uri.parse(uriString), rotationDegrees, outputCacheFile)
+
+    companion object {
+        operator fun invoke(context: Context): PdfEngine = DefaultPdfEngine(context)
+    }
+}
+
 @Singleton
-class PdfEngine @Inject constructor(
+open class DefaultPdfEngine @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+) : PdfEngine {
 
-    val cacheDir: File get() = context.cacheDir
+    override val cacheDir: File get() = context.cacheDir
 
-    suspend fun mergePdfs(
+    override suspend fun mergePdfs(
         uris: List<Uri>,
         outputCacheFile: File,
-        onProgress: ((Int) -> Unit)? = null
+        onProgress: ((Int) -> Unit)?
     ): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             val merger = PDFMergerUtility()
@@ -83,7 +135,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun splitPdf(uri: Uri, outputCacheFolder: File): Result<List<File>> = runCatching {
+    override suspend fun splitPdf(uri: Uri, outputCacheFolder: File): Result<List<File>> = runCatching {
         withContext(Dispatchers.IO) {
             outputCacheFolder.mkdirs()
             val splitFiles = mutableListOf<File>()
@@ -104,7 +156,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun compressPdf(uri: Uri, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun compressPdf(uri: Uri, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -135,7 +187,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun copyToUri(sourceFile: File, destinationUri: Uri): Result<Unit> = runCatching {
+    override suspend fun copyToUri(sourceFile: File, destinationUri: Uri): Result<Unit> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openOutputStream(destinationUri)?.use { outputStream ->
                 sourceFile.inputStream().use { inputStream ->
@@ -145,7 +197,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun copyToFolder(sourceFiles: List<File>, folderUri: Uri): Result<List<Pair<String, Uri>>> = runCatching {
+    override suspend fun copyToFolder(sourceFiles: List<File>, folderUri: Uri): Result<List<Pair<String, Uri>>> = runCatching {
         withContext(Dispatchers.IO) {
             val folder = DocumentFile.fromTreeUri(context, folderUri)
                 ?: throw IllegalStateException("Unable to access folder at URI: $folderUri")
@@ -170,7 +222,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun encryptPdf(uri: Uri, password: String, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun encryptPdf(uri: Uri, password: String, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -185,7 +237,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun decryptPdf(uri: Uri, password: String, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun decryptPdf(uri: Uri, password: String, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream, password).use { document ->
@@ -215,7 +267,7 @@ class PdfEngine @Inject constructor(
         return inSampleSize.coerceAtLeast(1)
     }
 
-    suspend fun imagesToPdf(uris: List<Uri>, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun imagesToPdf(uris: List<Uri>, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             PDDocument().use { document ->
                 for (uri in uris) {
@@ -271,7 +323,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun pdfToImages(uri: Uri, outputCacheFolder: File): Result<List<File>> = runCatching {
+    override suspend fun pdfToImages(uri: Uri, outputCacheFolder: File): Result<List<File>> = runCatching {
         withContext(Dispatchers.IO) {
             outputCacheFolder.mkdirs()
             val outputFiles = mutableListOf<File>()
@@ -295,7 +347,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun addWatermark(uri: Uri, watermarkText: String, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun addWatermark(uri: Uri, watermarkText: String, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -328,7 +380,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun extractText(uri: Uri, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun extractText(uri: Uri, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -341,7 +393,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun extractTextToString(uri: Uri): Result<String> = runCatching {
+    override suspend fun extractTextToString(uri: Uri): Result<String> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -352,7 +404,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun deletePages(uri: Uri, pagesToRemove: List<Int>, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun deletePages(uri: Uri, pagesToRemove: List<Int>, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -371,7 +423,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun rotatePages(uri: Uri, rotationDegrees: Int, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun rotatePages(uri: Uri, rotationDegrees: Int, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -385,7 +437,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun reorderPages(uri: Uri, newOrder: List<Int>, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun reorderPages(uri: Uri, newOrder: List<Int>, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { oldDoc ->
@@ -403,7 +455,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun extractSinglePage(uri: Uri, pageNumber: Int, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun extractSinglePage(uri: Uri, pageNumber: Int, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { oldDoc ->
@@ -422,7 +474,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun flattenPdf(uri: Uri, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun flattenPdf(uri: Uri, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
@@ -434,7 +486,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun searchInPdf(uri: Uri, query: String): Result<List<Int>> = runCatching {
+    override suspend fun searchInPdf(uri: Uri, query: String): Result<List<Int>> = runCatching {
         withContext(Dispatchers.IO) {
             val matchedPages = mutableListOf<Int>()
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
@@ -454,7 +506,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun getPageCount(uri: Uri): Result<Int> = runCatching {
+    override suspend fun getPageCount(uri: Uri): Result<Int> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openFileDescriptor(uri, "r")?.use { pfd ->
                 android.graphics.pdf.PdfRenderer(pfd).use { renderer ->
@@ -464,7 +516,7 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun splitSelectedPages(uri: Uri, selectedPages: List<Int>, outputCacheFolder: File): Result<List<File>> = runCatching {
+    override suspend fun splitSelectedPages(uri: Uri, selectedPages: List<Int>, outputCacheFolder: File): Result<List<File>> = runCatching {
         withContext(Dispatchers.IO) {
             outputCacheFolder.mkdirs()
             val splitFiles = mutableListOf<File>()
@@ -486,10 +538,10 @@ class PdfEngine @Inject constructor(
         }
     }
 
-    suspend fun extractPages(uri: Uri, pages: List<Int>, outputCacheFile: File): Result<File> =
+    override suspend fun extractPages(uri: Uri, pages: List<Int>, outputCacheFile: File): Result<File> =
         reorderPages(uri, pages, outputCacheFile)
 
-    suspend fun applyAnnotations(uri: Uri, edits: List<PdfEdit>, pageIndex: Int, outputCacheFile: File): Result<File> = runCatching {
+    override suspend fun applyAnnotations(uri: Uri, edits: List<PdfEdit>, pageIndex: Int, outputCacheFile: File): Result<File> = runCatching {
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(uri)?.use { inputStream ->
                 PDDocument.load(inputStream).use { document ->
