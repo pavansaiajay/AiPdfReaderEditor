@@ -1,0 +1,15 @@
+<resources>
+    <string name="chat_title">AI Document Chat</string>
+    <string name="chat_input_placeholder">Ask anything about this document...</string>
+    <string name="chat_send_description">Send message</string>
+    <string name="chat_back_description">Back</string>
+    <string name="chat_empty_title">Chat with your PDF</string>
+    <string name="chat_empty_desc">Powered by Gemini AI. Ask questions, request summaries, or extract key takeaways.</string>
+    <string name="chat_suggestion_summary">Summarize Key Points</string>
+    <string name="chat_suggestion_actions">Extract Action Items</string>
+    <string name="chat_suggestion_conclusion">Explain Main Conclusion</string>
+    <string name="chat_ai_typing">Gemini is analyzing...</string>
+    <string name="chat_token_cost_format">%1$d credit</string>
+    <string name="chat_page_citation">Page %1$d</string>
+    <string name="chat_error_dismiss">Dismiss</string>
+</resources>
